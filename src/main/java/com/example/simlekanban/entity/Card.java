@@ -1,6 +1,9 @@
 package com.example.simlekanban.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Card {
@@ -8,12 +11,14 @@ public class Card {
     @GeneratedValue
     private Long id;
 
+    @NotNull
     private String title;
     private String description;
     private Float position;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cardlist_id")
+    @JsonIgnore
     private CardList cardList;
 
     public Long getId() {

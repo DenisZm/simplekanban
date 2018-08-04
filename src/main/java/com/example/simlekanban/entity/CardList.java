@@ -3,6 +3,7 @@ package com.example.simlekanban.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class CardList {
@@ -10,6 +11,7 @@ public class CardList {
     @GeneratedValue
     private Long id;
 
+    @NotNull
     private String name;
     private Float position;
 
@@ -22,35 +24,31 @@ public class CardList {
         return id;
     }
 
-    public CardList setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public CardList setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public Float getPosition() {
         return position;
     }
 
-    public CardList setPosition(Float position) {
+    public void setPosition(Float position) {
         this.position = position;
-        return this;
     }
 
     public Board getBoard() {
         return board;
     }
 
-    public CardList setBoard(Board board) {
+    public void setBoard(Board board) {
         this.board = board;
-        return this;
     }
 }

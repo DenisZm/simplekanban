@@ -3,6 +3,7 @@ package com.example.simlekanban.entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Board {
@@ -10,23 +11,22 @@ public class Board {
     @GeneratedValue
     private Long id;
 
+    @NotNull
     private String name;
 
     public Long getId() {
         return id;
     }
 
-    public Board setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public Board setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 }
