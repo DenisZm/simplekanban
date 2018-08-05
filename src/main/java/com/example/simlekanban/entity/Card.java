@@ -40,7 +40,7 @@ public class Card {
     }
 
     public String getDescription() {
-        return description;
+        return description != null ? description : "";
     }
 
     public Card setDescription(String description) {
