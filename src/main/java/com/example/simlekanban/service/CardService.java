@@ -1,6 +1,6 @@
 package com.example.simlekanban.service;
 
-import com.example.simlekanban.dto.CardUpdate;
+import com.example.simlekanban.dto.CardRequestDto;
 import com.example.simlekanban.entity.Card;
 import com.example.simlekanban.entity.CardList;
 import com.example.simlekanban.exception.EntityNotFoundException;
@@ -45,7 +45,7 @@ public class CardService {
                 .orElseThrow(() -> new EntityNotFoundException("Card not found with id " + cardId));
     }
 
-    public Card updateCard(Long cardId, @Valid CardUpdate card) {
+    public Card updateCard(Long cardId, @Valid CardRequestDto card) {
         Card cardToUpdate = getCardById(cardId);
         cardToUpdate.setTitle(card.getTitle());
         if (card.getPosition() != null) {

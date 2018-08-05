@@ -2,7 +2,7 @@ package com.example.simlekanban.dto;
 
 import javax.validation.constraints.NotNull;
 
-public class CardUpdate {
+public class CardRequestDto {
     @NotNull
     private String title;
     private String description;

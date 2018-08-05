@@ -1,6 +1,6 @@
 package com.example.simlekanban.controller;
 
-import com.example.simlekanban.dto.CardUpdate;
+import com.example.simlekanban.dto.CardRequestDto;
 import com.example.simlekanban.entity.Card;
 import com.example.simlekanban.service.CardService;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class CardController {
 
     @PutMapping(path = "/{cardId}")
     public ResponseEntity<Card> updateCard(@PathVariable("cardId") Long cardId,
-                                           @Valid @RequestBody CardUpdate card) {
+                                           @Valid @RequestBody CardRequestDto card) {
         return ResponseEntity.ok(cardService.updateCard(cardId, card));
     }
 }
