@@ -39,6 +39,9 @@ public class CardListService {
     public CardList updateList(Long listId, CardList list) {
         CardList listToUpdate = getListById(listId);
         listToUpdate.setName(list.getName());
+        if (list.getPosition() != null) {
+            listToUpdate.setPosition(list.getPosition());
+        }
         return listRepository.save(listToUpdate);
     }
 
