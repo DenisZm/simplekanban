@@ -23,7 +23,7 @@ object for create and update board:
 * **/api/v1/boards/{id}/lists**  
 **GET** - get list(columns) of board  
 **POST** - create list(column) for board  
-* **/api/vi/lists/{id}  
+* **/api/vi/lists/{id}**  
 **GET** - get list info  
 **PUT** - update list  
 **DELETE** - delete list
