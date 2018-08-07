@@ -1,11 +1,15 @@
 package com.example.simlekanban.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Getter
+@Setter
 public class CardList {
     @Id
     @GeneratedValue
@@ -26,29 +30,5 @@ public class CardList {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Float getPosition() {
-        return position;
-    }
-
-    public void setPosition(Float position) {
-        this.position = position;
-    }
-
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 }
