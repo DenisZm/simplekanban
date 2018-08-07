@@ -5,6 +5,7 @@ import com.example.simlekanban.entity.Card;
 import com.example.simlekanban.entity.CardList;
 import com.example.simlekanban.exception.EntityNotFoundException;
 import com.example.simlekanban.repository.CardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -12,13 +13,11 @@ import java.util.List;
 
 @Service
 public class CardService {
-    private final CardRepository cardRepository;
-    private final CardListService listService;
 
-    public CardService(CardRepository cardRepository, CardListService listService) {
-        this.cardRepository = cardRepository;
-        this.listService = listService;
-    }
+    @Autowired
+    private CardRepository cardRepository;
+    @Autowired
+    private CardListService listService;
 
     public List<Card> getCardsByListId(Long listId) {
         return cardRepository.findByCardList_IdOrderByPosition(listId);
