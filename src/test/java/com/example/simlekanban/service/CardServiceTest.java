@@ -9,12 +9,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,26 +19,22 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class CardServiceTest {
 
-    @TestConfiguration
-    static class CardServiceTestContextConfiguration {
+    private static final String TITLE_1 = "card1";
+    private static final String TITLE_2 = "card2";
 
-        @Bean
-        public CardService cardService() {
-            return new CardService();
-        }
-    }
 
-    @Autowired
+    @InjectMocks
     private CardService cardService;
 
-    @MockBean
+    @Mock
     private CardRepository cardRepository;
 
-    @MockBean
+    @Mock
     private CardListService listService;
 
     @Before
@@ -51,40 +44,37 @@ public class CardServiceTest {
 
         Card card1 = new Card();
         card1.setId(1L);
-        card1.setTitle("card1");
+        card1.setTitle(TITLE_1);
         card1.setDescription("description1");
         card1.setPosition(65536F);
         card1.setCardList(list);
 
         Card card2 = new Card();
         card2.setId(2L);
-        card2.setTitle("card2");
+        card2.setTitle(TITLE_2);
         card2.setPosition(131072F);
+        card2.setCardList(list);
 
         List<Card> cards = Arrays.asList(card1, card2);
 
-        Mockito.when(cardRepository.findByCardList_IdOrderByPosition(1L))
+        when(cardRepository.findByCardList_IdOrderByPosition(list.getId()))
                 .thenReturn(cards);
-        Mockito.when(cardRepository.findById(card1.getId()))
+        when(cardRepository.findById(card1.getId()))
                 .thenReturn(Optional.of(card1));
-        Mockito.when(cardRepository.findById(-99L))
+        when(cardRepository.findById(-99L))
                 .thenReturn(Optional.empty());
-        Mockito.when(cardRepository.save(any(Card.class)))
+        when(cardRepository.save(any(Card.class)))
             .thenAnswer(i -> i.getArguments()[0]);
-
-        Mockito.when(listService.getListById(1L)).thenReturn(list);
     }
 
     @Test
     public void shouldReturnListOfCardsForProperListId() {
-        String title1 = "card1";
-        String title2 = "card2";
         Long listId = 1L;
 
         List<Card> allCards = cardService.getCardsByListId(listId);
         Assertions.assertThat(allCards).hasSize(2)
                 .extracting(Card::getTitle)
-                .contains(title1, title2);
+                .contains(TITLE_1, TITLE_2);
     }
 
     @Test
@@ -146,7 +136,7 @@ public class CardServiceTest {
         cardDto.setListId(expectedList.getId());
         Long cardId = 1L;
 
-        Mockito.when(listService.getListById(expectedList.getId())).thenReturn(expectedList);
+        when(listService.getListById(expectedList.getId())).thenReturn(expectedList);
 
         Card updatedCard = cardService.updateCard(cardId, cardDto);
         assertEquals(expectedList, updatedCard.getCardList());
