@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +25,12 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class CardServiceTest {
 
-    private static final String TITLE_1 = "card1";
-    private static final String TITLE_2 = "card2";
+    private static final Long CARD_1_ID = 1L;
+    private static final Long CARD_2_ID = 2L;
+    private static final String CARD_1_TITLE = "card1";
+    private static final String CARD_2_TITLE = "card2";
+    private static final Long CARD_LIST_ID = 1L;
+    private static final Long EMPTY_CARD_LIST_ID = 2L;
 
 
     @InjectMocks
@@ -40,25 +45,27 @@ public class CardServiceTest {
     @Before
     public void setUp() {
         CardList list = new CardList();
-        list.setId(1L);
+        list.setId(CARD_LIST_ID);
 
         Card card1 = new Card();
-        card1.setId(1L);
-        card1.setTitle(TITLE_1);
+        card1.setId(CARD_1_ID);
+        card1.setTitle(CARD_1_TITLE);
         card1.setDescription("description1");
         card1.setPosition(65536F);
         card1.setCardList(list);
 
         Card card2 = new Card();
-        card2.setId(2L);
-        card2.setTitle(TITLE_2);
+        card2.setId(CARD_2_ID);
+        card2.setTitle(CARD_2_TITLE);
         card2.setPosition(131072F);
         card2.setCardList(list);
 
         List<Card> cards = Arrays.asList(card1, card2);
 
-        when(cardRepository.findByCardList_IdOrderByPosition(list.getId()))
+        when(cardRepository.findByCardList_IdOrderByPosition(CARD_LIST_ID))
                 .thenReturn(cards);
+        when(cardRepository.findByCardList_IdOrderByPosition(EMPTY_CARD_LIST_ID))
+                .thenReturn(Collections.emptyList());
         when(cardRepository.findById(card1.getId()))
                 .thenReturn(Optional.of(card1));
         when(cardRepository.findById(-99L))
@@ -69,21 +76,16 @@ public class CardServiceTest {
 
     @Test
     public void shouldReturnListOfCardsForProperListId() {
-        Long listId = 1L;
-
-        List<Card> allCards = cardService.getCardsByListId(listId);
+        List<Card> allCards = cardService.getCardsByListId(CARD_LIST_ID);
         Assertions.assertThat(allCards).hasSize(2)
                 .extracting(Card::getTitle)
-                .contains(TITLE_1, TITLE_2);
+                .contains(CARD_1_TITLE, CARD_2_TITLE);
     }
 
     @Test
     public void shouldReturnCardByProperId() {
-        Long cardId = 1L;
-        String expectedTitle = "card1";
-
-        Card card = cardService.getCardById(cardId);
-        assertEquals(card.getTitle(), expectedTitle);
+        Card card = cardService.getCardById(CARD_1_ID);
+        assertEquals(CARD_1_TITLE, card.getTitle());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -95,7 +97,7 @@ public class CardServiceTest {
     @Test
     public void shouldSetCardPositionForEmptyList() {
         CardList list = new CardList();
-        list.setId(2L);
+        list.setId(EMPTY_CARD_LIST_ID);
 
         Card card = new Card();
         Float expectedPosition = 65536F;
@@ -107,7 +109,7 @@ public class CardServiceTest {
     @Test
     public void shouldSetNewCardPositionForExistList() {
         CardList list = new CardList();
-        list.setId(1L);
+        list.setId(CARD_LIST_ID);
 
         Card card = new Card();
         Float expectedPosition = 196608F;
@@ -121,24 +123,22 @@ public class CardServiceTest {
         String expectedDescription = "description2";
         CardRequestDto cardDto = new CardRequestDto();
         cardDto.setDescription(expectedDescription);
-        Long cardId = 1L;
 
-        Card updatedCard = cardService.updateCard(cardId, cardDto);
+        Card updatedCard = cardService.updateCard(CARD_1_ID, cardDto);
         assertEquals(expectedDescription, updatedCard.getDescription());
     }
 
     @Test
     public void shouldSetNewCardList() {
         CardList expectedList = new CardList();
-        expectedList.setId(2L);
+        expectedList.setId(EMPTY_CARD_LIST_ID);
 
         CardRequestDto cardDto = new CardRequestDto();
         cardDto.setListId(expectedList.getId());
-        Long cardId = 1L;
 
         when(listService.getListById(expectedList.getId())).thenReturn(expectedList);
 
-        Card updatedCard = cardService.updateCard(cardId, cardDto);
+        Card updatedCard = cardService.updateCard(CARD_1_ID, cardDto);
         assertEquals(expectedList, updatedCard.getCardList());
     }
 }
